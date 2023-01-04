@@ -1,4 +1,5 @@
 import { fileOpen } from './browser-fs-access-main/index.js'
+import clipboardCopy from './clipboard-copy/index.mjs'
 
 const svg = $$("svg")
 svg.addEventListener("click", async () => {
@@ -13,7 +14,7 @@ svg.addEventListener("click", async () => {
 const button = $$("button")
 button.addEventListener("click", async () => {
   try {
-    await navigator.clipboard.writeText($$("input").value)
+    await clipboardCopy($$("input").value)
     Toast.success("copy success")
   } catch(e) {
     Toast.error(String(e))
