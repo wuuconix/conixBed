@@ -1,8 +1,9 @@
 import { fileOpen } from './browser-fs-access-main/index.js'
 import clipboardCopy from './clipboard-copy/index.mjs'
+import md5 from "./md5/index.mjs"
+import Toast from './toast/index.mjs'
 
-const svg = $$("svg")
-svg.addEventListener("click", async () => {
+$("svg").addEventListener("click", async () => {
   try {
     const img = await pickImg()
     upload(img)
@@ -11,10 +12,9 @@ svg.addEventListener("click", async () => {
     Toast.error(String(e))
   }
 })
-const button = $$("button")
-button.addEventListener("click", async () => {
+$("button").addEventListener("click", async () => {
   try {
-    await clipboardCopy($$("input").value)
+    await clipboardCopy($("input").value)
     Toast.success("copy success")
   } catch(e) {
     Toast.error(String(e))
@@ -26,7 +26,7 @@ async function upload(img) {
   const nonce = Math.round(Math.random() * 1000000000)
   const ts = Math.trunc(+Date.now() / 1000)
   const token = "10c5a9d400c742cf8431a51df928d539"
-  const sign = SparkMD5.hash(`${token}_${ts}_${nonce}`)
+  const sign = md5(`${token}_${ts}_${nonce}`)
   console.log(`${token}_${ts}_${nonce}`)
   console.log(sign)
   formData.append("file", img, img.name)
@@ -45,14 +45,10 @@ async function upload(img) {
   console.log(res)
   if (res.err === 0) {
     Toast.success("upload success")
-    const img = $$("img")
-    const input = $$("input")
-    img.src = `https://pic.wuuconix.link/item/${res.ids[0]}`
-    input.value = `https://pic.wuuconix.link/item/${res.ids[0]}`
-    const upload = $$("svg.upload")
-    const wrapper = $$("div.wrapper")
-    upload.classList.add("hidden")
-    wrapper.classList.remove("hidden")
+    $("img").src = URL.createObjectURL(img)
+    $("input").value = `https://pic.wuuconix.link/item/${res.ids[0]}`
+    $("svg.upload").classList.add("hidden")
+    $("div.wrapper").classList.remove("hidden")
   } else {
     throw JSON.stringify(res)
   }
@@ -73,6 +69,6 @@ async function pickImg() {
   const fileData = await fileOpen(pickerOpts)
   return fileData
 }
-function $$(...args) {
+function $(...args) {
   return document.querySelector(...args)
 }
