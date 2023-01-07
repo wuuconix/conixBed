@@ -6,7 +6,7 @@ import Toast from './toast/index.mjs'
 $("svg").addEventListener("click", async () => {
   try {
     const img = await pickImg()
-    upload(img)
+    await upload(img)
   } catch(e) {
     console.log(e)
     Toast.error(String(e))
