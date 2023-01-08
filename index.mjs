@@ -3,7 +3,7 @@ import clipboardCopy from './clipboard-copy/index.mjs'
 import md5 from "./md5/index.mjs"
 import Toast from './toast/index.mjs'
 
-$("svg").addEventListener("click", async () => {
+$("img.upload").addEventListener("click", async () => {
   try {
     const img = await pickImg()
     await upload(img)
@@ -45,9 +45,9 @@ async function upload(img) {
   console.log(res)
   if (res.err === 0) {
     Toast.success("upload success")
-    $("img").src = URL.createObjectURL(img)
+    $("img.preview").src = URL.createObjectURL(img)
     $("input").value = `https://pic.wuuconix.link/item/${res.ids[0]}`
-    $("svg.upload").classList.add("hidden")
+    $("img.upload").classList.add("hidden")
     $("div.wrapper").classList.remove("hidden")
   } else {
     throw JSON.stringify(res)

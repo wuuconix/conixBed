@@ -1,4 +1,3 @@
-<script src="https://at.alicdn.com/t/c/font_3850397_7uo84zf4u3.js"></script>
 <script src="https://upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.2.min.js"></script>
 <script type="module" src="./index.mjs"></script>
 
@@ -12,18 +11,14 @@
   <link rel="icon" href="https://url.wuuconix.link/favicon">
   <link rel="stylesheet" href="./toast/index.css">
 </head>
-<body>
-  <svg class="icon upload" aria-hidden="true">
-    <use xlink:href="#icon-upload"></use>
-  </svg>
-  <div class="wrapper hidden">
-    <img src="https://url.wuuconix.link/favicon" alt="">
+<body class="flex">
+  <img class="upload" src="./assets/upload.svg">
+  <div class="wrapper flex hidden">
+    <img class="preview shadow" src="https://url.wuuconix.link" alt="">
     <div class="link">
-      <input type="url" value="https://url.wuuconix.link/favicon" readonly>
+      <input type="url" value="https://url.wuuconix.link" readonly>
       <button>
-        <svg class="icon copy" aria-hidden="true">
-          <use xlink:href="#icon-copy"></use>
-        </svg>
+        <img class="copy" src="./assets/copy.svg">
       </button>
     </div>
   </div>
@@ -37,46 +32,48 @@ html, body, .wrapper {
   padding: 0;
   margin: 0;
 }
-body {
-  width: 100%;
-  height: 100%;
+.flex {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-svg.upload {
+img.upload {
   margin-top: -10vh;
+  width: min(70%, 500px);
 }
 .hidden {
   display: none !important;
 }
-img, div.link, input, button {
+img.preview, div.link, input, button {
   vertical-align: middle;
 }
-.wrapper {
-  display: flex;
+div.flex.wrapper {
   justify-content: center;
-  align-items: center;
-  gap: 10px;
+  gap: 5%;
 }
-@media screen and (max-width: 560px) {
-  .wrapper {
+@media screen and (max-width: 1153px) {
+  div.flex.wrapper {
     flex-direction: column;
   }
 }
-img {
-  max-width: 300px;
-  box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
-  border-radius: 0.25rem;
+img.preview {
+  width: min(95%, 700px);
+  max-height: 100%;
+  object-fit: cover;
 }
 input {
   padding: 5px;
+  width: min(calc(95vw - 30px), 370px);
+  margin-right: -7px;
 }
 button {
   padding: 0;
 }
-svg.copy {
+img.copy {
   width: 25px;
-  height: 25px;
+}
+.shadow {
+  box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
+  border-radius: 0.25rem;
 }
 </style>
