@@ -12,10 +12,60 @@ $("img.upload").addEventListener("click", async () => {
     Toast.error(String(e))
   }
 })
+$("body").addEventListener("dragover", (e) => {
+  e.preventDefault()
+})
+$("body").addEventListener("drop", async (e) => {
+  e.preventDefault()
+  const items = e.dataTransfer.files
+  let file = null
+  if (items && items.length) {
+    for (const item of items) {
+      if (item.type.match("image")) {
+        file = item
+        break
+      }
+    }
+  } else {
+    return void Toast.error("没有检测到dataTransfer中的文件")
+  }
+  if (!file) {
+    return void Toast.error("拖拽传输对象中没有图片")
+  }
+  try {
+    await upload(file)
+  } catch(e) {
+    Toast.error(String(e))
+    console.log(e)
+  }
+})
 $("button").addEventListener("click", async () => {
   try {
     await clipboardCopy($("input").value)
     Toast.success("copy success")
+  } catch(e) {
+    Toast.error(String(e))
+    console.log(e)
+  }
+})
+document.addEventListener("paste", async (e) => {
+  const items = e.clipboardData.items
+  let file = null
+  if (items && items.length) {
+    for (const item of items) {
+      if (item.type.match("image")) {
+        file = item.getAsFile()
+        break
+      }
+    }
+  } else {
+    return void Toast.error("没有检测到剪贴板内容")
+  }
+  if (!file) {
+    return void Toast.error("剪贴板中没有图片")
+  }
+  try {
+    await upload(file)
   } catch(e) {
     Toast.error(String(e))
     console.log(e)
