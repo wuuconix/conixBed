@@ -2,6 +2,7 @@ import { fileOpen } from './browser-fs-access-main/index.js'
 import clipboardCopy from './clipboard-copy/index.mjs'
 import md5 from "./md5/index.mjs"
 import Toast from './toast/index.mjs'
+import Compressor from "./compressorjs/index.mjs"
 
 $("img.upload").addEventListener("click", async () => {
   try {
@@ -12,10 +13,10 @@ $("img.upload").addEventListener("click", async () => {
     Toast.error(String(e))
   }
 })
-$("body").addEventListener("dragover", (e) => {
+document.addEventListener("dragover", (e) => {
   e.preventDefault()
 })
-$("body").addEventListener("drop", async (e) => {
+document.addEventListener("drop", async (e) => {
   e.preventDefault()
   const items = e.dataTransfer.files
   let file = null
@@ -34,15 +35,6 @@ $("body").addEventListener("drop", async (e) => {
   }
   try {
     await upload(file)
-  } catch(e) {
-    Toast.error(String(e))
-    console.log(e)
-  }
-})
-$("button").addEventListener("click", async () => {
-  try {
-    await clipboardCopy($("input").value)
-    Toast.success("copy success")
   } catch(e) {
     Toast.error(String(e))
     console.log(e)
@@ -71,6 +63,27 @@ document.addEventListener("paste", async (e) => {
     console.log(e)
   }
 })
+$("button").addEventListener("click", async () => {
+  try {
+    await clipboardCopy($("input").value)
+    Toast.success("copy success")
+  } catch(e) {
+    Toast.error(String(e))
+    console.log(e)
+  }
+})
+function compress(img) {
+  return new Promise((res, rej) => {
+    new Compressor(img, {
+      success(result) {
+        res(result)
+      },
+      error(e) {
+        rej(e)
+      }
+    })
+  })
+}
 async function upload(img) {
   const formData = new FormData()
   const nonce = Math.round(Math.random() * 1000000000)
@@ -79,6 +92,12 @@ async function upload(img) {
   const sign = md5(`${token}_${ts}_${nonce}`)
   console.log(`${token}_${ts}_${nonce}`)
   console.log(sign)
+  if (img.size > 5000000) {
+    const temp = (img.size / 1000000).toFixed(2)
+    Toast.info(`图片大于5MB 自动压缩中...`)
+    img = await compress(img)
+    Toast.info(`压缩成功 ${temp}MB => ${(img.size / 1000000).toFixed(2)}MB`)
+  }
   formData.append("file", img, img.name)
   formData.append("nonce", String(nonce))
   formData.append("ts", String(ts))
