@@ -14,7 +14,7 @@
 <body class="flex">
   <img class="upload" src="./assets/upload.svg">
   <div class="wrapper flex hidden">
-    <img class="preview shadow" src="https://url.wuuconix.link/favicon" alt="">
+    <img class="preview shadow" src="https://url.wuuconix.link/favicon" alt="预览">
     <div class="link">
       <input type="url" value="https://url.wuuconix.link" readonly>
       <button>
@@ -57,9 +57,9 @@ div.flex.wrapper {
   }
 }
 img.preview {
-  width: min(95%, 700px);
+  max-width: min(700px, 95%);
   max-height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 input {
   padding: 5px;
@@ -75,5 +75,21 @@ img.copy {
 .shadow {
   box-shadow: 0 5px 11px 0 rgb(0 0 0 / 18%), 0 4px 15px 0 rgb(0 0 0 / 15%);
   border-radius: 0.25rem;
+}
+.wrapper:fullscreen {
+  overflow: auto;
+  display: block; /* 全屏时设置为block 若仍是flex将导致图片显示不全 */
+  position: relative;
+}
+.wrapper:fullscreen .link {
+  display: none;
+}
+.wrapper:fullscreen img.preview {
+  max-height: none;
+  max-width: none;
+  position: absolute;
+  left: 50%; top: 50%;
+  /* 独创：对于小图实现水平垂直居中 对于大图不至于translate过头 导致图片丢失 */
+  transform: translateX(max(-50%, -50vw)) translateY(max(-50%, -50vh));
 }
 </style>

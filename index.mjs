@@ -72,6 +72,13 @@ $("button").addEventListener("click", async () => {
     console.log(e)
   }
 })
+$("img.preview").addEventListener("click", () => {
+  if (!document.fullscreenElement) {
+    $(".wrapper").requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+})
 function compress(img) {
   return new Promise((res, rej) => {
     new Compressor(img, {
